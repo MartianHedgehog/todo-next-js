@@ -5,14 +5,15 @@
 This is a simple TODO app built with Next.js and Typescript.
 The list of technologies used in this project are:
 
-- React
-- Next.js
-- Typescript
-- Tailwind CSS
-- ESLint
-- Prettier
-- Husky
-- Inquirer
+- [React](https://reactjs.org/)
+- [Next.js](https://nextjs.org/)
+- [Typescript](https://www.typescriptlang.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [ESLint](https://eslint.org/)
+- [Prettier](https://prettier.io/)
+- [Husky](https://typicode.github.io/husky/)
+- [Inquirer](https://github.com/SBoudrias/Inquirer.js)
+- [shadcn/ui](https://ui.shadcn.com/)
 
 Some of my implementations and decisions are based on the desire to try new things and just do some experiments for fun.
 So you may find some things that are not the best practices or that are **not necessary** for this project.
