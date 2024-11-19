@@ -1,10 +1,11 @@
-
 # Next.js pet TODO app
 
 ## Introduction
+
 This is a simple TODO app built with Next.js and Typescript.
 The list of technologies used in this project are:
-- React 
+
+- React
 - Next.js
 - Typescript
 - Tailwind CSS
@@ -15,9 +16,8 @@ The list of technologies used in this project are:
 
 Some of my implementations and decisions are based on the desire to try new things and just do some experiments for fun.
 So you may find some things that are not the best practices or that are **not necessary** for this project.
-For example, there is a script that runs on the pre-commit hook that asks the user if they want to commit the changes. 
+For example, there is a script that runs on the pre-commit hook that asks the user if they want to commit the changes.
 Does it really so necessary? No, but it was fun to implement it.
-
 
 ## Getting Started
 
@@ -56,8 +56,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## Husky Hooks
 
-This project uses [Husky](https://typicode.github.io/husky) to automatically run linting and formatting checks 
-on every commit. This ensures that all code pushed to the repository follows the same style guidelines. 
+This project uses [Husky](https://typicode.github.io/husky) to automatically run linting and formatting checks
+on every commit. This ensures that all code pushed to the repository follows the same style guidelines.
 For now it works only for unix based systems. If you are using Windows, you can install WSL2 and use it from there.
 Or wait for the support for Windows to be added in the future and disable the hooks for now.
 
