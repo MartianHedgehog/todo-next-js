@@ -1,0 +1,96 @@
+import type { Task } from "@/components/TaskBoard/TaskCard";
+
+export const initialTasks: Task[] = [
+  {
+    id: "task1",
+    localId: "kek-2",
+    title: "Task 1",
+    columnId: "done",
+    content:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
+  },
+  {
+    id: "task2",
+    localId: "kek-3",
+    title: "Task 1",
+    columnId: "done",
+    content: "Gather requirements from stakeholders",
+  },
+  {
+    id: "task3",
+    localId: "kek-05",
+    title: "Task 1",
+    columnId: "done",
+    content: "Create wireframes and mockups",
+  },
+  {
+    id: "task4",
+    localId: "kek-6",
+    title: "Task 1",
+    columnId: "in-progress",
+    content: "Develop homepage layout",
+  },
+  {
+    id: "task5",
+    localId: "kek-7",
+    title: "Task 1",
+    columnId: "in-progress",
+    content: "Design color scheme and typography",
+  },
+  {
+    id: "task6",
+    localId: "kek-1",
+    columnId: "todo",
+    title: "Task 1",
+    content: "Implement user authentication",
+  },
+  {
+    id: "task7",
+    localId: "kek-1",
+    columnId: "todo",
+    title: "Task 1",
+    content: "Build contact us page",
+  },
+  {
+    id: "task8",
+    localId: "kek-1",
+    columnId: "todo",
+    title: "Task 1",
+    content: "Create product catalog",
+  },
+  {
+    id: "task9",
+    localId: "kek-1",
+    columnId: "todo",
+    title: "Task 1",
+    content: "Develop about us page",
+  },
+  {
+    id: "task10",
+    localId: "kek-1",
+    columnId: "todo",
+    title: "Task 1",
+    content: "Optimize website for mobile devices",
+  },
+  {
+    id: "task11",
+    localId: "kek-1",
+    columnId: "todo",
+    title: "Task 1",
+    content: "Integrate payment gateway",
+  },
+  {
+    id: "task12",
+    localId: "kek-1",
+    columnId: "todo",
+    title: "Task 1",
+    content: "Perform testing and bug fixing",
+  },
+  {
+    id: "task13",
+    localId: "kek-1",
+    columnId: "todo",
+    title: "Task 1",
+    content: "Launch website and deploy to server",
+  },
+];
