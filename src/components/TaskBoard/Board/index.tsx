@@ -1,9 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { BoardColumn } from "@/components/TaskBoard/Column";
-import { BoardContainer } from "@/components/TaskBoard/BoardContainer";
 import {
   DndContext,
   type DragEndEvent,
@@ -18,6 +16,8 @@ import {
   MouseSensor,
 } from "@dnd-kit/core";
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
+import { BoardColumn } from "@/components/TaskBoard/Column";
+import { BoardContainer } from "@/components/TaskBoard/BoardContainer";
 import { type Task, TaskCard } from "@/components/TaskBoard/TaskCard";
 import { hasDraggableData } from "@/utils/hasDraggableData";
 import { ColumnId } from "@/components/TaskBoard/Board/types";
@@ -31,8 +31,13 @@ export function Board() {
   const pickedUpTaskColumn = useRef<ColumnId | null>(null);
 
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
-
   const [activeTask, setActiveTask] = useState<Task | null>(null);
+  const [isClient, setIsClient] = useState(false);
+
+  // Workaround to avoid rendering the DragOverlay on the server
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
 
@@ -231,7 +236,7 @@ export function Board() {
         </SortableContext>
       </BoardContainer>
 
-      {"document" in window &&
+      {isClient &&
         createPortal(
           <DragOverlay>
             {activeTask && <TaskCard task={activeTask} isOverlay />}
