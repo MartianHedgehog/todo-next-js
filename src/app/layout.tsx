@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Rubik } from "next/font/google";
 import "./globals.css";
+import StoreProvider from "@/store/StoreProvider";
 
 export const metadata: Metadata = {
   title: "Just plan it",
@@ -19,8 +20,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${rubik.className}  antialiased`}>{children}</body>
-    </html>
+    <StoreProvider>
+      <html lang="en">
+        <body className={`${rubik.className}  antialiased`}>{children}</body>
+      </html>
+    </StoreProvider>
   );
 }

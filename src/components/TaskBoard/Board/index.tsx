@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import {
@@ -18,23 +17,26 @@ import {
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import { BoardColumn } from "@/components/TaskBoard/Column";
 import { BoardContainer } from "@/components/TaskBoard/BoardContainer";
-import { type Task, TaskCard } from "@/components/TaskBoard/TaskCard";
+import { TaskCard } from "@/components/TaskBoard/TaskCard";
 import { hasDraggableData } from "@/utils/hasDraggableData";
-import { ColumnId } from "@/components/TaskBoard/Board/types";
 import {
   COLLUMNS_ID,
   DEFAULT_COLUMNS,
 } from "@/components/TaskBoard/Board/constants";
 import { initialTasks } from "@/components/TaskBoard/Board/mockData";
 
+import { ColumnId } from "@/components/TaskBoard/Board/types";
+import { type TaskI } from "@/components/TaskBoard/TaskCard/types";
+
 export function Board() {
   const pickedUpTaskColumn = useRef<ColumnId | null>(null);
 
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
-  const [activeTask, setActiveTask] = useState<Task | null>(null);
-  const [isClient, setIsClient] = useState(false);
+  const [tasks, setTasks] = useState<TaskI[]>(initialTasks);
+  const [activeTask, setActiveTask] = useState<TaskI | null>(null);
 
   // Workaround to avoid rendering the DragOverlay on the server
+  const [isClient, setIsClient] = useState(false);
+
   useEffect(() => {
     setIsClient(true);
   }, []);

@@ -1,29 +1,11 @@
-import type { UniqueIdentifier } from "@dnd-kit/core";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { cva } from "class-variance-authority";
-import { ColumnId } from "@/components/TaskBoard/Board/types";
-
-export interface Task {
-  title: string;
-  localId: string;
-  id: UniqueIdentifier;
-  columnId: ColumnId;
-  content: string;
-}
-
-interface TaskCardProps {
-  task: Task;
-  isOverlay?: boolean;
-}
-
-export type TaskType = "Task";
-
-export interface TaskDragData {
-  type: TaskType;
-  task: Task;
-}
+import {
+  TaskCardProps,
+  TaskDragDataI,
+} from "@/components/TaskBoard/TaskCard/types";
 
 export function TaskCard({ task, isOverlay }: TaskCardProps) {
   const {
@@ -38,7 +20,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
     data: {
       type: "Task",
       task,
-    } satisfies TaskDragData,
+    } satisfies TaskDragDataI,
     attributes: {
       roleDescription: "Task",
     },

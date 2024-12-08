@@ -1,29 +1,14 @@
 import { useMemo } from "react";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
-import { type UniqueIdentifier } from "@dnd-kit/core";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Task, TaskCard } from "@/components/TaskBoard/TaskCard";
+import { TaskCard } from "@/components/TaskBoard/TaskCard";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-
-export interface Column {
-  id: UniqueIdentifier;
-  title: string;
-}
-
-export type ColumnType = "Column";
-
-export interface ColumnDragData {
-  type: ColumnType;
-  column: Column;
-}
-
-interface BoardColumnProps {
-  column: Column;
-  tasks: Task[];
-  isOverlay?: boolean;
-}
+import {
+  BoardColumnProps,
+  ColumnDragDataI,
+} from "@/components/TaskBoard/Column/types";
 
 export function BoardColumn({ column, tasks }: BoardColumnProps) {
   const tasksIds = useMemo(() => {
@@ -35,7 +20,7 @@ export function BoardColumn({ column, tasks }: BoardColumnProps) {
     data: {
       type: "Column",
       column,
-    } satisfies ColumnDragData,
+    } satisfies ColumnDragDataI,
     attributes: {
       roleDescription: `Column: ${column.title}`,
     },

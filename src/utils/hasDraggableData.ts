@@ -1,8 +1,8 @@
 import { Active, DataRef, Over } from "@dnd-kit/core";
-import { ColumnDragData } from "@/components/TaskBoard/Column";
-import { TaskDragData } from "@/components/TaskBoard/TaskCard";
+import { ColumnDragDataI } from "@/components/TaskBoard/Column/types";
+import { TaskDragDataI } from "@/components/TaskBoard/TaskCard/types";
 
-type DraggableData = ColumnDragData | TaskDragData;
+type DraggableData = ColumnDragDataI | TaskDragDataI;
 
 export function hasDraggableData<T extends Active | Over>(
   entry: T | null | undefined
