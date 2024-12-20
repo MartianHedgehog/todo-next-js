@@ -1,4 +1,4 @@
-import type { Column } from "@/components/TaskBoard/Column";
+import type { ColumnI } from "@/components/TaskBoard/Column/types";
 
 export const DEFAULT_COLUMNS = [
   {
@@ -13,6 +13,6 @@ export const DEFAULT_COLUMNS = [
     id: "done" as const,
     title: "Done",
   },
-] satisfies Column[];
+] satisfies ColumnI[];
 
-export const COLLUMNS_ID = DEFAULT_COLUMNS.map((col) => col.id);
+export const COLUMNS_ID = DEFAULT_COLUMNS.map((col) => col.id);

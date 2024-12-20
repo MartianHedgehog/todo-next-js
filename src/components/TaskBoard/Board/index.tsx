@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { useDispatch } from "react-redux";
 import {
   DndContext,
   type DragEndEvent,
@@ -15,23 +16,29 @@ import {
   MouseSensor,
 } from "@dnd-kit/core";
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
+import { AppDispatch, useAppSelector } from "@/store/store";
+import {
+  fetchTodoBoard,
+  getTasks,
+  postTodoBoard,
+} from "@/store/taskBoard/slice";
 import { BoardColumn } from "@/components/TaskBoard/Column";
 import { BoardContainer } from "@/components/TaskBoard/BoardContainer";
 import { TaskCard } from "@/components/TaskBoard/TaskCard";
 import { hasDraggableData } from "@/utils/hasDraggableData";
 import {
-  COLLUMNS_ID,
+  COLUMNS_ID,
   DEFAULT_COLUMNS,
 } from "@/components/TaskBoard/Board/constants";
-import { initialTasks } from "@/components/TaskBoard/Board/mockData";
-
 import { ColumnId } from "@/components/TaskBoard/Board/types";
 import { type TaskI } from "@/components/TaskBoard/TaskCard/types";
 
 export function Board() {
+  const dispatch = useDispatch<AppDispatch>();
+  const tasksFromStore = useAppSelector((state) => getTasks(state));
   const pickedUpTaskColumn = useRef<ColumnId | null>(null);
 
-  const [tasks, setTasks] = useState<TaskI[]>(initialTasks);
+  const [tasks, setTasks] = useState<TaskI[]>([]);
   const [activeTask, setActiveTask] = useState<TaskI | null>(null);
 
   // Workaround to avoid rendering the DragOverlay on the server
@@ -40,6 +47,14 @@ export function Board() {
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  useEffect(() => {
+    dispatch(fetchTodoBoard("some-id"));
+  }, [dispatch]);
+
+  useEffect(() => {
+    setTasks(tasksFromStore);
+  }, [tasksFromStore]);
 
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
 
@@ -156,6 +171,8 @@ export function Board() {
     if (!hasDraggableData(active)) return;
 
     if (activeId === overId) return;
+
+    dispatch(postTodoBoard(tasks));
   }
 
   function onDragOver(event: DragOverEvent) {
@@ -178,7 +195,7 @@ export function Board() {
 
     if (!isActiveATask) return;
 
-    // Im dropping a Task over another Task
+    // I'm dropping a Task over another Task
     if (isActiveATask && isOverATask) {
       setTasks((tasks) => {
         const activeIndex = tasks.findIndex((t) => t.id === activeId);
@@ -191,23 +208,28 @@ export function Board() {
           overTask &&
           activeTask.columnId !== overTask.columnId
         ) {
-          activeTask.columnId = overTask.columnId;
-          return arrayMove(tasks, activeIndex, overIndex - 1);
+          const updatedTask = { ...activeTask, columnId: overTask.columnId };
+          const updatedTasks = [...tasks];
+          updatedTasks[activeIndex] = updatedTask;
+          return arrayMove(updatedTasks, activeIndex, overIndex - 1);
         }
 
         return arrayMove(tasks, activeIndex, overIndex);
       });
     }
 
-    // Im dropping a Task over a column
+    // I'm dropping a Task over a column
     if (isActiveATask && isOverAColumn) {
       setTasks((tasks) => {
         const activeIndex = tasks.findIndex((t) => t.id === activeId);
         const activeTask = tasks[activeIndex];
 
         if (activeTask) {
-          activeTask.columnId = overId as ColumnId;
-          return arrayMove(tasks, activeIndex, activeIndex);
+          const updatedTask = { ...activeTask, columnId: overId as ColumnId };
+          const updatedTasks = [...tasks];
+          updatedTasks[activeIndex] = updatedTask;
+
+          return arrayMove(updatedTasks, activeIndex, activeIndex);
         }
 
         return tasks;
@@ -226,7 +248,7 @@ export function Board() {
       onDragOver={onDragOver}
     >
       <BoardContainer>
-        <SortableContext items={COLLUMNS_ID}>
+        <SortableContext items={COLUMNS_ID}>
           {DEFAULT_COLUMNS.map((col) => (
             <BoardColumn
               isOverlay

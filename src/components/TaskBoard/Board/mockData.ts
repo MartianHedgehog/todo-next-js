@@ -1,6 +1,6 @@
-import type { Task } from "@/components/TaskBoard/TaskCard";
+import type { TaskI } from "@/components/TaskBoard/TaskCard/types";
 
-export const initialTasks: Task[] = [
+export const MOCK_INITIAL_TASKS: TaskI[] = [
   {
     id: "task1",
     localId: "kek-2",
