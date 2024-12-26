@@ -1,7 +1,5 @@
 import { useMemo } from "react";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
-import { Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { TaskCard } from "@/components/TaskBoard/TaskCard";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -9,6 +7,7 @@ import {
   BoardColumnProps,
   ColumnDragDataI,
 } from "@/components/TaskBoard/Column/types";
+import { TaskBoardModal } from "@/components/TaskBoard/TaskBoardModal";
 
 export function BoardColumn({ column, tasks }: BoardColumnProps) {
   const tasksIds = useMemo(() => {
@@ -31,9 +30,7 @@ export function BoardColumn({ column, tasks }: BoardColumnProps) {
       <CardHeader className="p-4 font-semibold border-b-2 text-left flex justify-between flex-row items-center">
         <span> {column.title}</span>
 
-        <Button className="h-[30px] w-[30px]" variant="ghost" size="icon">
-          <Plus />
-        </Button>
+        <TaskBoardModal status={column.id} />
       </CardHeader>
 
       <ScrollArea>

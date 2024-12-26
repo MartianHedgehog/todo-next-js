@@ -1,8 +1,8 @@
-import type { UniqueIdentifier } from "@dnd-kit/core";
 import { TaskI } from "@/components/TaskBoard/TaskCard/types";
+import { TaskStatusT } from "@/components/TaskBoard/TaskBoardConfig";
 
 export interface ColumnI {
-  id: UniqueIdentifier;
+  id: TaskStatusT;
   title: string;
 }
 
