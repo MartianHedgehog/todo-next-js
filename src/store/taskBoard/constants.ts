@@ -1,5 +1,10 @@
-export const ADD_TASK = "ADD_TASK";
-export const UPDATE_TASK = "UPDATE_TASK";
-export const FETCH_TASKS = "FETCH_TASKS";
-export const FETCH_TASKS_SUCCESS = "FETCH_TASKS_SUCCESS";
-export const FETCH_TASKS_FAILED = "FETCH_TASKS_FAILED";
+import { TASK_DEFAULT_STATUS } from "@/components/TaskBoard/TaskBoardConfig";
+import { TaskI } from "@/components/TaskBoard/TaskCard/types";
+
+export const DEFAULT_TASK = {
+  content: "",
+  status: TASK_DEFAULT_STATUS,
+  title: "",
+  id: "",
+  localId: "test-1",
+} satisfies TaskI;

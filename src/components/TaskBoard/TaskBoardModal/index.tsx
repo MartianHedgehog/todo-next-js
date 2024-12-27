@@ -1,4 +1,7 @@
 import { SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
+import { Plus } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,49 +16,43 @@ import FormSelect from "@/components/FormComponents/Select";
 import { SelectItem } from "@/components/ui/select";
 import { DEFAULT_COLUMNS } from "@/components/TaskBoard/Board/constants";
 import { Form } from "@/components/ui/form";
-import { z } from "zod";
 import { NewTaskSchema } from "@/components/TaskBoard/TaskBoardModal/schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store/store";
+import { postTask } from "@/store/taskBoard/slice";
+import {
+  TaskBoardFormValues,
+  TaskBoardModalProps,
+} from "@/components/TaskBoard/TaskBoardModal/types";
+import { DEFAULT_TASK } from "@/store/taskBoard/constants";
+import { TASK_DEFAULT_STATUS } from "@/components/TaskBoard/TaskBoardConfig";
 
-type StatusId = (typeof DEFAULT_COLUMNS)[number]["id"];
+export function TaskBoardModal({
+  status,
+  toggleModal,
+  isOpen,
+}: TaskBoardModalProps) {
+  const dispatch = useDispatch<AppDispatch>();
 
-interface FormValues {
-  title: string;
-  content: string;
-  status: StatusId;
-}
-
-interface TaskBoardModalProps {
-  status: StatusId;
-}
-
-export function TaskBoardModal({ status }: TaskBoardModalProps) {
   const form = useForm<z.infer<typeof NewTaskSchema>>({
     defaultValues: {
       title: "",
       content: "",
-      status: status || "todo",
+      status: status || TASK_DEFAULT_STATUS,
     },
     mode: "onSubmit",
     resolver: zodResolver(NewTaskSchema),
   });
 
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    setTimeout(async () => {
-      const fakeResponse = await new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(data);
-        }, 1000);
-      });
+  const onSubmit: SubmitHandler<TaskBoardFormValues> = async (data) => {
+    dispatch(postTask({ ...DEFAULT_TASK, ...data }));
 
-      console.log(fakeResponse);
-    }, 1000);
+    toggleModal();
   };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
+    <Dialog open={isOpen}>
+      <DialogTrigger asChild onClick={toggleModal}>
         <Button
           disabled={form.formState.isLoading || form.formState.isSubmitting}
           className="h-[30px] w-[30px]"
@@ -79,7 +76,7 @@ export function TaskBoardModal({ status }: TaskBoardModalProps) {
           >
             <FormSelect label="Status" name="status" control={form.control}>
               {DEFAULT_COLUMNS.map((column) => (
-                <SelectItem key={column.id} value={column.id}>
+                <SelectItem key={column.status} value={column.status}>
                   {column.title}
                 </SelectItem>
               ))}

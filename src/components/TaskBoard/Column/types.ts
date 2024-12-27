@@ -2,7 +2,7 @@ import { TaskI } from "@/components/TaskBoard/TaskCard/types";
 import { TaskStatusT } from "@/components/TaskBoard/TaskBoardConfig";
 
 export interface ColumnI {
-  id: TaskStatusT;
+  status: TaskStatusT;
   title: string;
 }
 

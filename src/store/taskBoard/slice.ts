@@ -22,50 +22,77 @@ const todoBoardSlice = createAppSlice({
   name: "todoBoard",
   initialState: boardState,
   reducers: {
-    addTask: (state: BoardStateI, action: PayloadAction<TaskI>) => {
-      state.tasks.push(action.payload);
-    },
-    editTask: (state: BoardStateI, action: PayloadAction<TaskI>) => {
-      const taskIndex = state.tasks.findIndex(
-        (task) => task.id === action.payload.id
-      );
-
-      state.tasks[taskIndex] = action.payload;
-    },
-    setTasks: (state: BoardStateI, action: PayloadAction<TaskI[]>) => {
+    setTasks: (state, action: PayloadAction<TaskI[]>) => {
       state.tasks = action.payload;
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchTodoBoard.pending.type, (state: BoardStateI) => {
+    builder.addCase(fetchTodoBoard.pending, (state) => {
       state.isLoading = true;
     });
     builder.addCase(
-      fetchTodoBoard.fulfilled.type,
-      (state: BoardStateI, action: PayloadAction<TaskI[]>) => {
+      fetchTodoBoard.fulfilled,
+      (state, action: PayloadAction<TaskI[]>) => {
         state.isLoading = false;
         state.tasks = action.payload;
       }
     );
-    builder.addCase(fetchTodoBoard.rejected.type, (state: BoardStateI) => {
+    builder.addCase(fetchTodoBoard.rejected, (state) => {
       state.isLoading = false;
       state.isFailed = true;
     });
 
-    builder.addCase(postTodoBoard.pending.type, (state: BoardStateI) => {
+    builder.addCase(postTask.pending, (state) => {
       state.isLoading = true;
     });
-
-    builder.addCase(postTodoBoard.fulfilled.type, (state: BoardStateI) => {
+    builder.addCase(
+      postTask.fulfilled,
+      (state, action: PayloadAction<TaskI>) => {
+        state.isLoading = false;
+        state.tasks.unshift(action.payload);
+      }
+    );
+    builder.addCase(postTask.rejected, (state) => {
       state.isLoading = false;
+      state.isFailed = true;
     });
 
-    builder.addCase(postTodoBoard.rejected.type, (state: BoardStateI) => {
+    builder.addCase(editTask.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(
+      editTask.fulfilled,
+      (state, action: PayloadAction<TaskI>) => {
+        state.isLoading = false;
+        const taskIndex = state.tasks.findIndex(
+          (task) => task.id === action.payload.id
+        );
+        if (taskIndex !== -1) {
+          state.tasks[taskIndex] = action.payload;
+        }
+      }
+    );
+    builder.addCase(editTask.rejected, (state) => {
       state.isLoading = false;
       state.isFailed = true;
     });
   },
 });
+
+export const editTask = createAsyncThunk<TaskI, TaskI>(
+  "todoBoard/editTask",
+  async (task, thunkAPI) => {
+    try {
+      return await new Promise<TaskI>((resolve) => {
+        setTimeout(() => {
+          resolve(task);
+        }, 1000);
+      });
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 
 export const fetchTodoBoard = createAsyncThunk<TaskI[], string>(
   "todoBoard/fetchTodoBoard",
@@ -74,6 +101,21 @@ export const fetchTodoBoard = createAsyncThunk<TaskI[], string>(
       return await new Promise<TaskI[]>((resolve) => {
         setTimeout(() => {
           resolve(MOCK_INITIAL_TASKS);
+        }, 1000);
+      });
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const postTask = createAsyncThunk<TaskI, TaskI>(
+  "todoBoard/postTask",
+  async (task, thunkAPI) => {
+    try {
+      return await new Promise<TaskI>((resolve) => {
+        setTimeout(() => {
+          resolve(task);
         }, 1000);
       });
     } catch (error) {
@@ -97,7 +139,7 @@ export const postTodoBoard = createAsyncThunk<void, TaskI[]>(
   }
 );
 
-export const { addTask, editTask, setTasks } = todoBoardSlice.actions;
+export const { setTasks } = todoBoardSlice.actions;
 export const getTasks = (state: RootState) => state.taskBoard.tasks;
 
 export const { reducer: todoBoardSliceReducer } = todoBoardSlice;

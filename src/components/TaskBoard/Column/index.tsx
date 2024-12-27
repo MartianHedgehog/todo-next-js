@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { TaskCard } from "@/components/TaskBoard/TaskCard";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -10,12 +10,13 @@ import {
 import { TaskBoardModal } from "@/components/TaskBoard/TaskBoardModal";
 
 export function BoardColumn({ column, tasks }: BoardColumnProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const tasksIds = useMemo(() => {
     return tasks.map((task) => task.id);
   }, [tasks]);
 
   const { setNodeRef } = useSortable({
-    id: column.id,
+    id: column.status,
     data: {
       type: "Column",
       column,
@@ -25,12 +26,20 @@ export function BoardColumn({ column, tasks }: BoardColumnProps) {
     },
   });
 
+  const toggleModal = () => {
+    setIsModalOpen((isModalOpenPrev) => !isModalOpenPrev);
+  };
+
   return (
     <Card ref={setNodeRef} className="w-full">
       <CardHeader className="p-4 font-semibold border-b-2 text-left flex justify-between flex-row items-center">
         <span> {column.title}</span>
 
-        <TaskBoardModal status={column.id} />
+        <TaskBoardModal
+          status={column.status}
+          isOpen={isModalOpen}
+          toggleModal={toggleModal}
+        />
       </CardHeader>
 
       <ScrollArea>

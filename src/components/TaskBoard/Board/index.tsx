@@ -17,20 +17,13 @@ import {
 } from "@dnd-kit/core";
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import { AppDispatch, useAppSelector } from "@/store/store";
-import {
-  fetchTodoBoard,
-  getTasks,
-  postTodoBoard,
-} from "@/store/taskBoard/slice";
+import { editTask, fetchTodoBoard, getTasks } from "@/store/taskBoard/slice";
 import { BoardColumn } from "@/components/TaskBoard/Column";
 import { BoardContainer } from "@/components/TaskBoard/BoardContainer";
 import { TaskCard } from "@/components/TaskBoard/TaskCard";
 import { hasDraggableData } from "@/utils/hasDraggableData";
-import {
-  COLUMNS_ID,
-  DEFAULT_COLUMNS,
-} from "@/components/TaskBoard/Board/constants";
-import { ColumnId } from "@/components/TaskBoard/Board/types";
+import { DEFAULT_COLUMNS } from "@/components/TaskBoard/Board/constants";
+import { COLUMN_IDS, ColumnId } from "@/components/TaskBoard/Board/types";
 import { type TaskI } from "@/components/TaskBoard/TaskCard/types";
 
 export function Board() {
@@ -59,9 +52,9 @@ export function Board() {
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
 
   function getDraggingTaskData(taskId: UniqueIdentifier, columnId: ColumnId) {
-    const tasksInColumn = tasks.filter((task) => task.columnId === columnId);
+    const tasksInColumn = tasks.filter((task) => task.status === columnId);
     const taskPosition = tasksInColumn.findIndex((task) => task.id === taskId);
-    const column = DEFAULT_COLUMNS.find((col) => col.id === columnId);
+    const column = DEFAULT_COLUMNS.find((col) => col.status === columnId);
 
     return {
       tasksInColumn,
@@ -75,7 +68,7 @@ export function Board() {
       if (!hasDraggableData(active)) return;
 
       if (active.data.current?.type === "Task") {
-        pickedUpTaskColumn.current = active.data.current.task.columnId;
+        pickedUpTaskColumn.current = active.data.current.task.status;
 
         const { tasksInColumn, taskPosition, column } = getDraggingTaskData(
           active.id,
@@ -98,9 +91,9 @@ export function Board() {
       ) {
         const { tasksInColumn, taskPosition, column } = getDraggingTaskData(
           over.id,
-          over.data.current.task.columnId
+          over.data.current.task.status
         );
-        if (over.data.current.task.columnId !== pickedUpTaskColumn.current) {
+        if (over.data.current.task.status !== pickedUpTaskColumn.current) {
           return `Task ${
             active.data.current.task.content
           } was moved over column ${column?.title} in position ${
@@ -124,10 +117,10 @@ export function Board() {
       ) {
         const { tasksInColumn, taskPosition, column } = getDraggingTaskData(
           over.id,
-          over.data.current.task.columnId
+          over.data.current.task.status
         );
 
-        if (over.data.current.task.columnId !== pickedUpTaskColumn.current) {
+        if (over.data.current.task.status !== pickedUpTaskColumn.current) {
           return `Task was dropped into column ${column?.title} in position ${
             taskPosition + 1
           } of ${tasksInColumn.length}`;
@@ -171,8 +164,6 @@ export function Board() {
     if (!hasDraggableData(active)) return;
 
     if (activeId === overId) return;
-
-    dispatch(postTodoBoard(tasks));
   }
 
   function onDragOver(event: DragOverEvent) {
@@ -203,14 +194,12 @@ export function Board() {
         const activeTask = tasks[activeIndex];
         const overTask = tasks[overIndex];
 
-        if (
-          activeTask &&
-          overTask &&
-          activeTask.columnId !== overTask.columnId
-        ) {
-          const updatedTask = { ...activeTask, columnId: overTask.columnId };
+        if (activeTask && overTask && activeTask.status !== overTask.status) {
+          const updatedTask = { ...activeTask, status: overTask.status };
           const updatedTasks = [...tasks];
           updatedTasks[activeIndex] = updatedTask;
+
+          dispatch(editTask(updatedTask));
           return arrayMove(updatedTasks, activeIndex, overIndex - 1);
         }
 
@@ -225,10 +214,11 @@ export function Board() {
         const activeTask = tasks[activeIndex];
 
         if (activeTask) {
-          const updatedTask = { ...activeTask, columnId: overId as ColumnId };
+          const updatedTask = { ...activeTask, status: overId as ColumnId };
           const updatedTasks = [...tasks];
           updatedTasks[activeIndex] = updatedTask;
 
+          dispatch(editTask(updatedTask));
           return arrayMove(updatedTasks, activeIndex, activeIndex);
         }
 
@@ -248,13 +238,13 @@ export function Board() {
       onDragOver={onDragOver}
     >
       <BoardContainer>
-        <SortableContext items={COLUMNS_ID}>
+        <SortableContext items={COLUMN_IDS}>
           {DEFAULT_COLUMNS.map((col) => (
             <BoardColumn
               isOverlay
-              key={col.id}
+              key={col.status}
               column={col}
-              tasks={tasks.filter((task) => task.columnId === col.id)}
+              tasks={tasks.filter((task) => task.status === col.status)}
             />
           ))}
         </SortableContext>

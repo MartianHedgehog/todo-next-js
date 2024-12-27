@@ -3,10 +3,10 @@ import { ColumnId } from "@/components/TaskBoard/Board/types";
 
 export interface TaskI {
   title: string;
-  localId: string;
   id: UniqueIdentifier;
-  columnId: ColumnId;
+  status: ColumnId;
   content: string;
+  localId: string;
 }
 
 export interface TaskCardProps {

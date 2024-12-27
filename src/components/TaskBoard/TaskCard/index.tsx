@@ -49,15 +49,17 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
       })}
     >
       <CardHeader
-        className="px-3 py-3 space-between flex flex-row border-b-2 border-secondary relative cursor-grab min-w-[300px]"
+        className="px-3 py-3 justify-between flex flex-row border-b-2 border-secondary relative cursor-grab min-w-[300px]"
         {...attributes}
         {...listeners}
       >
         <span>{task.title}</span>
+
+        <span>{task.localId}</span>
       </CardHeader>
 
       <CardContent className="px-3 pt-3 pb-6 text-left whitespace-pre-wrap">
-        {task.localId}
+        {task.content}
       </CardContent>
     </Card>
   );
