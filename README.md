@@ -16,9 +16,8 @@ The list of technologies used in this project are:
 - [React Hook Form](https://react-hook-form.com/)
 - [Zod](https://zod.dev/)
 - [shadcn/ui](https://ui.shadcn.com/)
-### Development tools:
-
 - [DnD-kit](https://dndkit.com/)
+### Development tools:
 - [ESLint](https://eslint.org/)
 - [Prettier](https://prettier.io/)
 - [Husky](https://typicode.github.io/husky/)
@@ -95,5 +94,14 @@ To enable the hooks, you can run the following command:
 ```bash
   export HUSKY=1
 ```
+
+### Pre-commit hook
+
+The pre-commit hook runs the script that check if there are any errors or warnings in the code.
+If there are any, asks if you want to run the script that will fix them or fix them manually.
+
+### Commit-msg hook
+
+The commit-msg hook runs the script that checks if the commit message follows the conventional commit format.
 
 Enjoy the app! 🚀
