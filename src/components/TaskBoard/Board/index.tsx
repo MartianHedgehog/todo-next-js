@@ -23,10 +23,14 @@ import { BoardContainer } from "@/components/TaskBoard/BoardContainer";
 import { TaskCard } from "@/components/TaskBoard/TaskCard";
 import { hasDraggableData } from "@/utils/hasDraggableData";
 import { DEFAULT_COLUMNS } from "@/components/TaskBoard/Board/constants";
-import { COLUMN_IDS, ColumnId } from "@/components/TaskBoard/Board/types";
+import {
+  BoardProps,
+  COLUMN_IDS,
+  ColumnId,
+} from "@/components/TaskBoard/Board/types";
 import { type TaskI } from "@/components/TaskBoard/TaskCard/types";
 
-export function Board() {
+export function Board({ boardId }: BoardProps) {
   const dispatch = useDispatch<AppDispatch>();
   const tasksFromStore = useAppSelector((state) => getTasks(state));
   const pickedUpTaskColumn = useRef<ColumnId | null>(null);
@@ -42,8 +46,10 @@ export function Board() {
   }, []);
 
   useEffect(() => {
-    dispatch(fetchTodoBoard("some-id"));
-  }, [dispatch]);
+    if (typeof boardId === "string") {
+      dispatch(fetchTodoBoard(boardId));
+    }
+  }, [boardId, dispatch]);
 
   useEffect(() => {
     setTasks(tasksFromStore);

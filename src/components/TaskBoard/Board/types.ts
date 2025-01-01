@@ -6,3 +6,7 @@ export type ColumnId = (typeof DEFAULT_COLUMNS)[number]["status"];
 export const COLUMN_IDS = DEFAULT_COLUMNS.map((column) => ({
   id: column.status as UniqueIdentifier,
 }));
+
+export interface BoardProps {
+  boardId?: string | string[];
+}
