@@ -8,5 +8,5 @@ export const COLUMN_IDS = DEFAULT_COLUMNS.map((column) => ({
 }));
 
 export interface BoardProps {
-  boardId?: string | string[];
+  boardId?: string;
 }

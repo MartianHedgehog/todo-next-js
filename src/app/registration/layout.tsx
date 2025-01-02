@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-export default function LoginLayout({
+export default function RegistrationPage({
   children,
 }: Readonly<{ children: ReactNode }>) {
   return (

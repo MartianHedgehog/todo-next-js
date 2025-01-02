@@ -1,6 +1,5 @@
 import { Control, FieldValues, Path } from "react-hook-form";
 import { Input } from "@/components/ui/input";
-import { SelectProps } from "@radix-ui/react-select";
 import {
   FormControl,
   FormDescription,
@@ -9,8 +8,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { InputHTMLAttributes } from "react";
 
-interface InputProps<T extends FieldValues> extends SelectProps {
+interface InputProps<T extends FieldValues>
+  extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   name: Path<T>;
   control: Control<T>;

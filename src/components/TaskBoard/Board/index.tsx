@@ -46,6 +46,7 @@ export function Board({ boardId }: BoardProps) {
   }, []);
 
   useEffect(() => {
+    console.log(boardId);
     if (typeof boardId === "string") {
       dispatch(fetchTodoBoard(boardId));
     }

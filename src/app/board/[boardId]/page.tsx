@@ -1,9 +1,10 @@
+"use client";
 import { Board } from "@/components/TaskBoard/Board";
-import { useRouter } from "next/router";
+import { usePathname } from "next/navigation";
 
 export default function BoardPage() {
-  const router = useRouter();
-  const { boardId } = router.query;
+  const pathname = usePathname();
+  const boardId = pathname.split("/").pop();
 
   return <Board boardId={boardId} />;
 }
