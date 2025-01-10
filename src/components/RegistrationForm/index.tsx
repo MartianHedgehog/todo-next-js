@@ -1,4 +1,6 @@
 "use client";
+import { useState } from "react";
+import { toast } from "react-hot-toast";
 import { z } from "zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,8 +11,12 @@ import { Form } from "@/components/ui/form";
 import Link from "next/link";
 import { RegistrationSchema } from "@/components/RegistrationForm/schema";
 import { ServicesButtons } from "@/components/ServicesButtons";
+import { signIn } from "next-auth/react";
+import { getError } from "@/utils/getError";
 
 export function RegistrationForm() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const form = useForm<z.infer<typeof RegistrationSchema>>({
     defaultValues: {
       name: "",
@@ -22,10 +28,43 @@ export function RegistrationForm() {
     resolver: zodResolver(RegistrationSchema),
   });
 
-  const onSubmit: SubmitHandler<z.infer<typeof RegistrationSchema>> = (
+  const onSubmit: SubmitHandler<z.infer<typeof RegistrationSchema>> = async (
     data
   ) => {
-    console.log(data);
+    try {
+      const response = await fetch("/api/register", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+
+        if (Array.isArray(errorData.errors) && errorData.errors.length > 0) {
+          errorData.errors.forEach((error: Error) => {
+            toast.error(error.message);
+          });
+
+          return;
+        }
+
+        toast.error(errorData.message);
+        return;
+      }
+
+      await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      });
+    } catch (error: unknown) {
+      toast.error(getError(error).message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -76,7 +115,7 @@ export function RegistrationForm() {
             />
           </div>
 
-          <Button type="submit" className="w-full">
+          <Button type="submit" disabled={isSubmitting} className="w-full">
             Sign up
           </Button>
 

@@ -10,10 +10,15 @@ import {
 import { MainNavigation } from "@/components/MainNavigation";
 import { MOCK_DATA } from "@/components/AppSidebar/mockData";
 import { UserNavigation } from "@/components/UserNavigation";
+import { Session } from "next-auth";
 
 // TODO - Add footer to sidebar
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  session: Session;
+}
+
+export function AppSidebar({ session, ...props }: AppSidebarProps) {
   const { isMobile } = useSidebar();
 
   return (
@@ -23,7 +28,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       {...props}
     >
       <SidebarHeader>
-        <UserNavigation user={MOCK_DATA.user} />
+        <UserNavigation user={session.user} />
       </SidebarHeader>
       <SidebarContent>
         <MainNavigation items={MOCK_DATA.navMain} />

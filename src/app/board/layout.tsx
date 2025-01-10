@@ -6,13 +6,20 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 
-export default function Layout({
-  children,
-}: Readonly<{ children: ReactNode }>) {
+import { redirect } from "next/navigation";
+import { getSession } from "@/app/actions";
+
+export default async function Layout({ children }: { children: ReactNode }) {
+  const session = await getSession();
+
+  if (!session?.user) {
+    redirect("/login");
+  }
+
   return (
     <main className="w-full h-full">
       <SidebarProvider>
-        <AppSidebar />
+        <AppSidebar session={session} />
 
         <SidebarInset>
           <header className="flex flex-row-reverse md:flex-row h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">

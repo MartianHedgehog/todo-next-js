@@ -1,27 +1,60 @@
 "use client";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import { z } from "zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { signIn } from "next-auth/react";
+import { useSearchParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { LoginSchema } from "@/components/LoginForm/schema";
 import FormInput from "@/components/FormComponents/Input";
 import { Form } from "@/components/ui/form";
-import Link from "next/link";
-import Image from "next/image";
+import { getError } from "@/utils/getError";
 
 export function LoginForm() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const callbackUrl = searchParams.get("callbackUrl") || "/board";
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const form = useForm<z.infer<typeof LoginSchema>>({
     defaultValues: {
-      email: "",
-      password: "",
+      email: "test@test.test",
+      password: "Test12345678",
     },
     mode: "onBlur",
     resolver: zodResolver(LoginSchema),
   });
 
-  const onSubmit: SubmitHandler<z.infer<typeof LoginSchema>> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<z.infer<typeof LoginSchema>> = async (data) => {
+    try {
+      setIsSubmitting(true);
+
+      const response = await signIn("credentials", {
+        redirect: false,
+        email: data.email,
+        password: data.password,
+        redirectTo: callbackUrl,
+      });
+      setIsSubmitting(false);
+      if (!response?.error) {
+        toast.success("successfully logged in");
+        router.push(callbackUrl);
+      } else {
+        form.reset({ password: "" });
+        const message = "invalid email or password";
+        toast.error(message);
+      }
+    } catch (error: unknown) {
+      toast.error(getError(error).message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -58,7 +91,7 @@ export function LoginForm() {
             />
           </div>
 
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
             Login
           </Button>
 
